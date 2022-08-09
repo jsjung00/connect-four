@@ -9,6 +9,9 @@ const CANVAS_HEIGHT = 6 * BLOCK_WIDTH + TOP_PADDING + BOTTOM_PADDING;
 const BG_COLOR = 220;
 const BOARD_STATE = []; //matrix where 0-empty, 1-Player1, 2-Player2
 let hoverChip;
+var humanStarts;
+var MAX_DEPTH = 3;
+
 function setup() {
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   //init board state
@@ -19,7 +22,13 @@ function setup() {
     }
     BOARD_STATE.push(rowVec);
   }
-  hoverChip = new HoverChip();
+  //decide randomly which player starts
+  if (Math.random() < 0.5) {
+    humanStarts = true;
+  } else {
+    humanStarts = true;
+  }
+  hoverChip = new HoverChip(humanStarts);
 }
 
 function draw() {
@@ -64,105 +73,18 @@ function draw() {
 
   //GAME MECHANICS
   //only check game winning condition if not currently falling
-  if (!hoverChip.isFalling && isOver()) {
+  if (!hoverChip.isFalling && isOver(BOARD_STATE) != 0) {
     console.log("Game over");
   }
-
-  hoverChip.update(true);
+  hoverChip.update();
+  if (!hoverChip.isHuman) {
+    hoverChip.AIMoves();
+  }
 }
 
 function mouseClicked() {
-  if (hoverChip.isPlayer) {
-    hoverChip.playerClicked();
+  if (hoverChip.isHuman) {
+    hoverChip.humanClicked();
   }
   return;
-}
-
-//returns boolean if game is over, brute force method
-function isOver() {
-  //check any horizontal wins
-  for (let i = 0; i < 6; i++) {
-    for (let j = 0; j < 4; j++) {
-      let allFour = true;
-      let blockPlayer = BOARD_STATE[i][j];
-      if (blockPlayer == 0) {
-        continue;
-      }
-      for (let k = 1; k < 4; k++) {
-        if (BOARD_STATE[i][j + k] != blockPlayer) {
-          allFour = false;
-          break;
-        }
-      }
-      if (allFour) {
-        console.log("horizontal");
-        noLoop();
-        return true;
-      }
-    }
-  }
-  //vertical wins
-  for (let j = 0; j < 7; j++) {
-    for (let i = 0; i < 3; i++) {
-      let allFour = true;
-      let blockPlayer = BOARD_STATE[i][j];
-      if (blockPlayer == 0) {
-        continue;
-      }
-      for (let k = 1; k < 4; k++) {
-        if (BOARD_STATE[i + k][j] != blockPlayer) {
-          allFour = false;
-          break;
-        }
-      }
-      if (allFour) {
-        console.log("vertical");
-        noLoop();
-        return true;
-      }
-    }
-  }
-  //right diaganol wins
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 4; j++) {
-      let allFour = true;
-      const blockPlayer = BOARD_STATE[i][j];
-      if (blockPlayer == 0) {
-        continue;
-      }
-      for (let k = 1; k < 4; k++) {
-        if (BOARD_STATE[i + k][j + k] != blockPlayer) {
-          allFour = false;
-          break;
-        }
-      }
-      if (allFour) {
-        console.log("right diag");
-        noLoop();
-        return true;
-      }
-    }
-  }
-  //left diaganol wins
-  for (let i = 0; i < 3; i++) {
-    for (let j = 3; j < 7; j++) {
-      let allFour = true;
-      const blockPlayer = BOARD_STATE[i][j];
-      if (blockPlayer == 0) {
-        continue;
-      }
-      for (let k = 1; k < 4; k++) {
-        if (BOARD_STATE[i + k][j - k] != blockPlayer) {
-          allFour = false;
-          break;
-        }
-      }
-      if (allFour) {
-        console.log("left diag");
-        noLoop();
-        return true;
-      }
-    }
-  }
-  return false;
 }

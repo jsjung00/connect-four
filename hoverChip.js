@@ -1,19 +1,21 @@
 class HoverChip {
-  constructor() {
-    this.isPlayer = true; //false when robot's turn
+  constructor(humanStarts) {
+    this.isHuman = humanStarts; //init to true if human starts
     this.x = 0;
     this.y = 0;
-    this.player = 1; //1 or 2
+    this.player = 1; //init to 1 (maximizer)
     this.isFalling = false;
     this.destinationRow;
     this.animatedCol;
     this.fallSpeed = 10;
   }
   show() {
-    if (this.isPlayer) {
-      if (this.isFalling) {
-        return;
-      }
+    //don't show hover chip at top if move is in progress
+    if (this.isFalling) {
+      return;
+    }
+    //show hover chip if human turn ready and mouse within board widths
+    if (this.isHuman) {
       if (this.x < SIDE_PADDING || this.x > CANVAS_WIDTH - SIDE_PADDING) {
         return;
       }
@@ -41,17 +43,13 @@ class HoverChip {
       pop();
     }
   }
-  update(isPlayer) {
-    if (isPlayer) {
-      this.isPlayer = true;
-    } else {
-      this.isPlayer = false;
-      return;
-    }
-    //update the coordinates
+  update() {
     if (!this.isFalling) {
-      this.x = mouseX;
-      this.y = mouseY;
+      //update location to human mouse if human turn and move not in progress
+      if (this.isHuman) {
+        this.x = mouseX;
+        this.y = mouseY;
+      }
     } else {
       const curRow = Math.floor((this.y - TOP_PADDING) / BLOCK_WIDTH);
       if (curRow == this.destinationRow) {
@@ -62,6 +60,7 @@ class HoverChip {
         this.isFalling = false;
         //change player
         this.player = Math.abs(this.player - 2) + 1;
+        this.isHuman = !this.isHuman;
       } else {
         //chip reaches the next row
         if (BOARD_STATE[curRow][this.animatedCol] == 0) {
@@ -74,8 +73,11 @@ class HoverChip {
       }
     }
   }
-  //called when player clicks
-  playerClicked() {
+  //called when human clicks
+  humanClicked() {
+    if (!this.isHuman) {
+      return;
+    }
     if (mouseX < SIDE_PADDING || mouseX > CANVAS_WIDTH - SIDE_PADDING) {
       return;
     }
@@ -85,7 +87,7 @@ class HoverChip {
     this.x = mouseX;
     const colSlot = Math.floor((this.x - SIDE_PADDING) / BLOCK_WIDTH);
     //do nothing if col is full
-    if (!this.moveValid(colSlot)) {
+    if (!this.playerMoveValid(colSlot)) {
       return;
     }
     this.isFalling = true;
@@ -102,7 +104,20 @@ class HoverChip {
       this.destinationRow = 5;
     }
   }
-  moveValid(colSlot) {
+  playerMoveValid(colSlot) {
     return BOARD_STATE[0][colSlot] == 0;
+  }
+
+  AIMoves() {
+    //make a move if AI move not in progress
+    if (!this.Falling) {
+      console.log("calling getAIMove()");
+      const toMove = getAIMove();
+
+      this.isFalling = true;
+      this.destinationRow = toMove[0];
+      this.animatedCol = toMove[1];
+      this.y = TOP_PADDING;
+    }
   }
 }
