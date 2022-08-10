@@ -88,3 +88,16 @@ function mouseClicked() {
   }
   return;
 }
+
+function testHeuristic() {
+  test_board = [
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 1, 0, 0],
+  ];
+  const altH = altHeuristicValue(test_board, 2);
+  console.log(`altH: ${altH}`);
+}

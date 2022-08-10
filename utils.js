@@ -79,7 +79,7 @@ function isOver(board) {
   return 0;
 }
 
-//get the heuristic value of the board
+//get the heuristic value of the board. Counts the number of contiguous triples and doubles.
 //Each triple is worth 3 points, each double is worth 1, value is calculated by total Player points + total Points blocked
 
 function getHeuristicValue(board, playerNum) {
@@ -343,5 +343,137 @@ function getHeuristicValue(board, playerNum) {
       playerCombos[3] * 3 +
       0.75 *
         (blockedCombos[2] * 1 + blockedCombos[3] * 2 + blockedCombos[4] * 8))
+  );
+}
+
+//Considers all windows of 4. If window is free (i.e no opponent piece in window), then add the number of AI pieces in window after placing piece. Moreover, if window has no AI pieces and has opponent pieces,
+//then add the number of opponent pieces in window + 1 to represent the blocked combo (downweighted)
+function altHeuristicValue(board, playerNum) {
+  const oppPlayerNum = Math.abs(playerNum - 2) + 1;
+  playerCombos = { 1: 0, 2: 0, 3: 0 }; //if window has one AI piece and no opp, then we add one to 2 count
+  blockedCombos = { 2: 0, 3: 0, 4: 0 }; //we add counter to 4 if opp has three pieces in a window and we block the fourth
+  //search horizontally
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7 - 3; j++) {
+      let window = board[i].slice(j, j + 4);
+      let humanPiecesInWindow = 0;
+      let aiPiecesInWindow = 0;
+      for (const obj of window) {
+        humanPiecesInWindow =
+          obj === playerNum ? humanPiecesInWindow + 1 : humanPiecesInWindow;
+        aiPiecesInWindow =
+          obj === oppPlayerNum ? aiPiecesInWindow + 1 : aiPiecesInWindow;
+      }
+      //only add to playerCombos if window has no opponent pieces
+      if (humanPiecesInWindow === 0) {
+        playerCombos[aiPiecesInWindow + 1] += 1;
+      } else {
+        blockedCombos[humanPiecesInWindow + 1] += 1;
+      }
+    }
+  }
+  //search vertically
+  for (let j = 0; j < 7; j++) {
+    for (let i = 0; i < 6 - 3; i++) {
+      let humanPiecesInWindow = 0;
+      let aiPiecesInWindow = 0;
+      for (let k = 0; k < 4; k++) {
+        const obj = board[i + k][j];
+        humanPiecesInWindow =
+          obj === playerNum ? humanPiecesInWindow + 1 : humanPiecesInWindow;
+        aiPiecesInWindow =
+          obj === oppPlayerNum ? aiPiecesInWindow + 1 : aiPiecesInWindow;
+      }
+      //only add to playerCombos if window has no opponent pieces
+      if (humanPiecesInWindow === 0) {
+        playerCombos[aiPiecesInWindow + 1] += 1;
+      } else {
+        blockedCombos[humanPiecesInWindow + 1] += 1;
+      }
+    }
+  }
+  //search right diag.
+  for (let j = 0; j < 6; j++) {
+    let humanPiecesInWindow = 0;
+    let aiPiecesInWindow = 0;
+    const numIncrements = Math.min(6 - j, 5);
+    for (let k = 0; k < numIncrements; k++) {
+      const obj = board[0 + k][j + k];
+      humanPiecesInWindow =
+        obj === playerNum ? humanPiecesInWindow + 1 : humanPiecesInWindow;
+      aiPiecesInWindow =
+        obj === oppPlayerNum ? aiPiecesInWindow + 1 : aiPiecesInWindow;
+    }
+    //only add to playerCombos if window has no opponent pieces
+    if (humanPiecesInWindow === 0) {
+      playerCombos[aiPiecesInWindow + 1] += 1;
+    } else {
+      blockedCombos[humanPiecesInWindow + 1] += 1;
+    }
+  }
+  for (let i = 1; i < 5; i++) {
+    let humanPiecesInWindow = 0;
+    let aiPiecesInWindow = 0;
+    const numIncrements = Math.min(5 - i, 6);
+    for (let k = 0; k < numIncrements; k++) {
+      const obj = board[i + k][0 + k];
+      humanPiecesInWindow =
+        obj === playerNum ? humanPiecesInWindow + 1 : humanPiecesInWindow;
+      aiPiecesInWindow =
+        obj === oppPlayerNum ? aiPiecesInWindow + 1 : aiPiecesInWindow;
+    }
+    //only add to playerCombos if window has no opponent pieces
+    if (humanPiecesInWindow === 0) {
+      playerCombos[aiPiecesInWindow + 1] += 1;
+    } else {
+      blockedCombos[humanPiecesInWindow + 1] += 1;
+    }
+  }
+  //search left diag.
+  for (let j = 1; j < 7; j++) {
+    let humanPiecesInWindow = 0;
+    let aiPiecesInWindow = 0;
+    const numIncrements = Math.min(j, 5);
+    for (let k = 0; k < numIncrements; k++) {
+      const obj = board[0 + k][j - k];
+      humanPiecesInWindow =
+        obj === playerNum ? humanPiecesInWindow + 1 : humanPiecesInWindow;
+      aiPiecesInWindow =
+        obj === oppPlayerNum ? aiPiecesInWindow + 1 : aiPiecesInWindow;
+    }
+    //only add to playerCombos if window has no opponent pieces
+    if (humanPiecesInWindow === 0) {
+      playerCombos[aiPiecesInWindow + 1] += 1;
+    } else {
+      blockedCombos[humanPiecesInWindow + 1] += 1;
+    }
+  }
+  for (let i = 1; i < 5; i++) {
+    let humanPiecesInWindow = 0;
+    let aiPiecesInWindow = 0;
+    const numIncrements = Math.min(6, 5 - i);
+    for (let k = 0; k < numIncrements; k++) {
+      const obj = board[i + k][6 - k];
+      humanPiecesInWindow =
+        obj === playerNum ? humanPiecesInWindow + 1 : humanPiecesInWindow;
+      aiPiecesInWindow =
+        obj === oppPlayerNum ? aiPiecesInWindow + 1 : aiPiecesInWindow;
+    }
+    //only add to playerCombos if window has no opponent pieces
+    if (humanPiecesInWindow === 0) {
+      playerCombos[aiPiecesInWindow + 1] += 1;
+    } else {
+      blockedCombos[humanPiecesInWindow + 1] += 1;
+    }
+  }
+  //weight value down to prevent non-terminating state to be higher value than terminating state
+  return (
+    0.25 *
+    (playerCombos[1] * 0 +
+      playerCombos[2] * 2 +
+      playerCombos[3] * 5 +
+      blockedCombos[2] * 0.75 +
+      blockedCombos[3] * 2 +
+      blockedCombos[4] * 20)
   );
 }

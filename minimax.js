@@ -19,11 +19,15 @@ function minimax(board, depth, isMaximizing, alph, beta) {
   //heurustic value if at max depth
   if (depth >= MAX_DEPTH) {
     const playerNum = humanStarts ? 2 : 1;
-    const heuristicValue = getHeuristicValue(board, playerNum);
+    const heuristicValue = altHeuristicValue(board, playerNum);
     if (
       Math.abs(heuristicValue - 0.5 * heuristicValue * (depth / MAX_DEPTH)) > 40
     ) {
-      console.log("HV is larger");
+      console.log(
+        `HV is larger ${Math.abs(
+          heuristicValue - 0.5 * heuristicValue * (depth / MAX_DEPTH)
+        )}`
+      );
     }
     return heuristicValue - 0.5 * heuristicValue * (depth / MAX_DEPTH);
   }
