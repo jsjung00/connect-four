@@ -118,6 +118,7 @@ class HoverChip {
       this.destinationRow = toMove[0];
       this.animatedCol = toMove[1];
       this.y = TOP_PADDING;
+      console.log("call done");
     }
   }
 }

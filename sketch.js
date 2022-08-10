@@ -10,7 +10,7 @@ const BG_COLOR = 220;
 const BOARD_STATE = []; //matrix where 0-empty, 1-Player1, 2-Player2
 let hoverChip;
 var humanStarts;
-var MAX_DEPTH = 3;
+var MAX_DEPTH = 10;
 
 function setup() {
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -77,7 +77,7 @@ function draw() {
     console.log("Game over");
   }
   hoverChip.update();
-  if (!hoverChip.isHuman) {
+  if (!hoverChip.isHuman && !hoverChip.isFalling) {
     hoverChip.AIMoves();
   }
 }
