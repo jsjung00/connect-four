@@ -11,25 +11,32 @@ function minimax(board, depth, isMaximizing, alph, beta) {
   //check if game terminated
   const overResult = isOver(board);
   if (overResult == 1) {
-    return MAX_BASE - 0.5 * MAX_BASE * (depth / MAX_DEPTH);
+    return MAX_BASE - 0.25 * MAX_BASE * (depth / MAX_DEPTH);
   }
   if (overResult == 2) {
-    return MIN_BASE + 0.5 * MAX_BASE * (depth / MAX_DEPTH);
+    return MIN_BASE + 0.25 * MAX_BASE * (depth / MAX_DEPTH);
   }
   //heurustic value if at max depth
   if (depth >= MAX_DEPTH) {
     const playerNum = humanStarts ? 2 : 1;
-    const heuristicValue = altHeuristicValue(board, playerNum);
+    const heuristicValue = altHeuristicValue(board, playerNum, false);
     if (
-      Math.abs(heuristicValue - 0.5 * heuristicValue * (depth / MAX_DEPTH)) > 40
+      Math.abs(heuristicValue - 0.25 * heuristicValue * (depth / MAX_DEPTH)) >
+      40
     ) {
       console.log(
         `HV is larger ${Math.abs(
-          heuristicValue - 0.5 * heuristicValue * (depth / MAX_DEPTH)
+          heuristicValue - 0.25 * heuristicValue * (depth / MAX_DEPTH)
         )}`
       );
     }
-    return heuristicValue - 0.5 * heuristicValue * (depth / MAX_DEPTH);
+    const discountedHeuristicValue =
+      heuristicValue - 0 * heuristicValue * (depth / MAX_DEPTH);
+    if (playerNum === 1) {
+      return discountedHeuristicValue;
+    } else {
+      return -1 * discountedHeuristicValue;
+    }
   }
 
   //game non-terminated
@@ -59,7 +66,7 @@ function minimax(board, depth, isMaximizing, alph, beta) {
       }
       let childBoard = board.map((row) => row.slice());
       childBoard[nextMove[0]][nextMove[1]] = 2;
-      let childVal = minimax(board, depth + 1, true, alph, beta);
+      let childVal = minimax(childBoard, depth + 1, true, alph, beta);
       bestVal = Math.min(bestVal, childVal);
       beta = Math.min(beta, bestVal);
       if (beta <= alph) {

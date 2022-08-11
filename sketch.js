@@ -10,7 +10,7 @@ const BG_COLOR = 220;
 const BOARD_STATE = []; //matrix where 0-empty, 1-Player1, 2-Player2
 let hoverChip;
 var humanStarts;
-var MAX_DEPTH = 10;
+var MAX_DEPTH = 6;
 
 function setup() {
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -29,6 +29,7 @@ function setup() {
     humanStarts = true;
   }
   hoverChip = new HoverChip(humanStarts);
+  testHeuristic();
 }
 
 function draw() {
@@ -96,8 +97,8 @@ function testHeuristic() {
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 0, 1, 0, 0],
+    [2, 0, 0, 2, 0, 1, 1],
   ];
-  const altH = altHeuristicValue(test_board, 2);
+  const altH = altHeuristicValue(test_board, 2, true);
   console.log(`altH: ${altH}`);
 }
