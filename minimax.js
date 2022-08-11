@@ -31,7 +31,7 @@ function minimax(board, depth, isMaximizing, alph, beta) {
       );
     }
     const discountedHeuristicValue =
-      heuristicValue - 0 * heuristicValue * (depth / MAX_DEPTH);
+      heuristicValue - 0.25 * heuristicValue * (depth / MAX_DEPTH);
     if (playerNum === 1) {
       return discountedHeuristicValue;
     } else {

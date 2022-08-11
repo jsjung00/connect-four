@@ -56,8 +56,10 @@ class HoverChip {
         if (curRow > 0) {
           BOARD_STATE[curRow - 1][this.animatedCol] = 0;
         }
+        console.log(BOARD_STATE);
         BOARD_STATE[curRow][this.animatedCol] = this.player;
         this.isFalling = false;
+        console.log(BOARD_STATE);
         //change player
         this.player = Math.abs(this.player - 2) + 1;
         this.isHuman = !this.isHuman;
@@ -112,12 +114,16 @@ class HoverChip {
     //make a move if AI move not in progress
     if (!this.Falling) {
       console.log("calling getAIMove()");
-      const toMove = getAIMove();
-
       this.isFalling = true;
+      const toMove = getAIMove();
+      console.log("got AI move");
       this.destinationRow = toMove[0];
+      console.log(`Destination row: ${toMove[0]}`);
       this.animatedCol = toMove[1];
       this.y = TOP_PADDING;
+      console.log(BOARD_STATE[5]);
+      console.log(BOARD_STATE[5][3]);
+      console.log(BOARD_STATE);
       console.log("call done");
     }
   }

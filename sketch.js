@@ -11,6 +11,7 @@ const BOARD_STATE = []; //matrix where 0-empty, 1-Player1, 2-Player2
 let hoverChip;
 var humanStarts;
 var MAX_DEPTH = 6;
+var called = false;
 
 function setup() {
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -24,24 +25,15 @@ function setup() {
   }
   //decide randomly which player starts
   if (Math.random() < 0.5) {
-    humanStarts = true;
+    humanStarts = false;
   } else {
-    humanStarts = true;
+    humanStarts = false;
   }
   hoverChip = new HoverChip(humanStarts);
   testHeuristic();
 }
 
-function draw() {
-  background(BG_COLOR);
-  //draw the board
-  fill(255, 204, 0);
-  rect(
-    SIDE_PADDING,
-    TOP_PADDING,
-    CANVAS_WIDTH - 2 * SIDE_PADDING,
-    CANVAS_HEIGHT - (TOP_PADDING + BOTTOM_PADDING)
-  );
+function drawCircles() {
   //draw the circle slots
   for (let row = 0; row < 6; row++) {
     push();
@@ -70,6 +62,20 @@ function draw() {
     }
     pop();
   }
+}
+
+function draw() {
+  //console.log("draw called");
+  background(BG_COLOR);
+  //draw the board
+  fill(255, 204, 0);
+  rect(
+    SIDE_PADDING,
+    TOP_PADDING,
+    CANVAS_WIDTH - 2 * SIDE_PADDING,
+    CANVAS_HEIGHT - (TOP_PADDING + BOTTOM_PADDING)
+  );
+  drawCircles();
   hoverChip.show();
 
   //GAME MECHANICS
@@ -77,10 +83,13 @@ function draw() {
   if (!hoverChip.isFalling && isOver(BOARD_STATE) != 0) {
     console.log("Game over");
   }
-  hoverChip.update();
   if (!hoverChip.isHuman && !hoverChip.isFalling) {
     hoverChip.AIMoves();
   }
+
+  //console.log("call hoverchip update");
+  hoverChip.update();
+  drawCircles();
 }
 
 function mouseClicked() {
