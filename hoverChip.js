@@ -116,14 +116,9 @@ class HoverChip {
       console.log("calling getAIMove()");
       this.isFalling = true;
       const toMove = getAIMove();
-      console.log("got AI move");
       this.destinationRow = toMove[0];
-      console.log(`Destination row: ${toMove[0]}`);
       this.animatedCol = toMove[1];
       this.y = TOP_PADDING;
-      console.log(BOARD_STATE[5]);
-      console.log(BOARD_STATE[5][3]);
-      console.log(BOARD_STATE);
       console.log("call done");
     }
   }

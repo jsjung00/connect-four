@@ -7,15 +7,88 @@
     <title>Sketch</title>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
-
     <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js"></script>
   </head>
 
   <body>
+    <div id="container">
+      <div id="startContainer">
+        <div class="titleRow">
+          <div>Settings</div>
+        </div>
+        <div class="settingRow">
+          <div>Starting Player</div>
+          <select name="firstPlayer" id="firstPlayer">
+            <option value="human">Human</option>
+            <option value="cpu">CPU</option>
+          </select>
+        </div>
+        <div class="settingRow">
+          <div>Max Search Depth</div>
+          <div class="sliderContainer">
+            <input
+              id="slider"
+              type="range"
+              min="1"
+              max="10"
+              step="1"
+              oninput="depthSliderChange(this.value)"
+            />
+            <output id="depthSliderValue">6</output>
+          </div>
+        </div>
+        <div class="settingRow">
+          <div>Epsilon Random</div>
+          <div class="sliderContainer">
+            <input
+              id="epsilon"
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              oninput="epsilonSliderChange(this.value)"
+            />
+            <output id="epsilonSliderValue">0.00</output>
+          </div>
+        </div>
+        <div class="playRow">
+          <button
+            type="button"
+            name="unclicked"
+            id="playButton"
+            onclick="clickPlay(this)"
+          >
+            Play
+          </button>
+        </div>
+      </div>
+      <div id="sketchContainer"></div>
+    </div>
+
     <script src="sketch.js"></script>
     <script src="hoverChip.js"></script>
     <script src="minimax.js"></script>
     <script src="utils.js"></script>
   </body>
+  <script>
+    document.getElementById("epsilon").value = 0.0;
+  </script>
+  <script>
+    function depthSliderChange(val) {
+      document.getElementById("depthSliderValue").innerHTML = val;
+    }
+    function epsilonSliderChange(val) {
+      const formattedVal = Number.parseFloat(val).toFixed(2);
+
+      document.getElementById("epsilonSliderValue").innerHTML = formattedVal;
+      console.log(formattedVal);
+    }
+
+    function clickPlay(elm) {
+      elm.name = "clicked";
+      document.getElementById("startContainer").style.display = "none";
+      document.getElementById("sketchContainer").style.display = "block";
+    }
+  </script>
 </html>

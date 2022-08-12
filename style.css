@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
@@ -6,3 +7,40 @@ html, body {
 canvas {
   display: block;
 }
+#container {
+  width: 610px;
+  height: 610px;
+}
+#startContainer {
+  width: 100%;
+  height: 100%;
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.titleRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+}
+.settingRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0px 10px;
+}
+.playRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#sketchContainer {
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+@use "@material/slider/styles";

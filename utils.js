@@ -1,4 +1,4 @@
-//returns winning player (1 or 2) if game over, else return 0
+//returns winning player (1 or 2) or -1 for draw if game over, else return 0
 function isOver(board) {
   //check any horizontal wins
   for (let i = 0; i < 6; i++) {
@@ -76,6 +76,14 @@ function isOver(board) {
       }
     }
   }
+  chipCount = 0;
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (board[i][j] != 0) chipCount += 1;
+    }
+  }
+  if (chipCount === 42) return -1;
+
   return 0;
 }
 
@@ -475,4 +483,10 @@ function replaceBoardWith(oldI, oldJ, i, j, playerNum) {
   let oldBoard = returnBoardWithout(oldI, oldJ);
   oldBoard[i][j] = playerNum;
   return oldBoard;
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }

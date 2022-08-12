@@ -80,6 +80,19 @@ function minimax(board, depth, isMaximizing, alph, beta) {
 /* returns the indices (i,j) of the best move AI should make.
  * */
 function getAIMove() {
+  //choose random move epsilon number of times
+  if (Math.random() < epsilon) {
+    console.log("random");
+    let valid_moves = [];
+    for (let j = 0; j < 7; j++) {
+      if (getNextMove(j, BOARD_STATE) != null) {
+        valid_moves.push(j);
+      }
+    }
+    const nextColMove = getRandomInt(0, valid_moves.length);
+    return getNextMove(nextColMove, BOARD_STATE);
+  }
+
   //AI is minimizer
   if (humanStarts) {
     let bestMove;
