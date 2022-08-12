@@ -170,9 +170,14 @@ function gameIsOver() {
   text(displayText, width / 2, SIDE_PADDING);
   replayButton = createButton("Replay");
   replayButton.style.width = replayButtonWidth;
-  replayButton.position(
+  /*replayButton.position(
     width / 2 - replayButtonWidth / 2,
-    SIDE_PADDING + dispTextSize
+    SIDE_PADDING + dispTextSize,
+    "relative"
+  );*/
+  replayButton.position(
+    windowWidth / 2 - replayButtonWidth / 2,
+    0.5 * (windowHeight - CANVAS_HEIGHT) + SIDE_PADDING + dispTextSize
   );
   replayButton.mousePressed(restartClicked);
   noLoop();
