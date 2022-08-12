@@ -1,2 +1,2 @@
-# Connect-four
-Play connect four against the computer- implemented with minimax and alpha-beta pruning
+# Connect-Four
+Play Connect Four against the computer- implemented with minimax and alpha-beta pruning.
