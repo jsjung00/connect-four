@@ -6,7 +6,7 @@ const TOP_PADDING = SIDE_PADDING + BLOCK_WIDTH;
 const BOTTOM_PADDING = SIDE_PADDING;
 const CANVAS_WIDTH = 7 * BLOCK_WIDTH + 2 * SIDE_PADDING;
 const CANVAS_HEIGHT = 6 * BLOCK_WIDTH + TOP_PADDING + BOTTOM_PADDING;
-const BG_COLOR = 220;
+let BG_COLOR;
 let BOARD_STATE; //matrix where 0-empty, 1-Player1, 2-Player2
 const replayButtonWidth = 50;
 let hoverChip;
@@ -21,6 +21,7 @@ var epsilon;
 function setup() {
   var myCanvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   myCanvas.parent("sketchContainer");
+  BG_COLOR = color("rgb(225,229,242)");
 }
 
 function resetSketch() {
@@ -153,6 +154,7 @@ function gameIsOver() {
     displayText = "Human Wins";
   }
   textAlign(CENTER, TOP);
+  textFont("Roboto");
 
   switch (winner) {
     case -1:
